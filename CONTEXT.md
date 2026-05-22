@@ -17,7 +17,7 @@ The time-ordered collection of recent NMEA Sentences shown to the user. Each log
 _Avoid_: Packet list, terminal output
 
 **Baud Rate**:
-The serial line speed selected when opening a receiver connection. A mismatched Baud Rate can turn valid receiver output into unreadable text.
+The serial line speed selected when opening a receiver connection. A mismatched Baud Rate can turn valid receiver output into unreadable text; QZ1 connections default to 115200.
 _Avoid_: Speed, frequency
 
 ## Example Dialogue
