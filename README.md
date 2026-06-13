@@ -8,7 +8,8 @@ A simple browser-based serial monitor for receiving and displaying NMEA-0183 out
 - NMEA Sentence receive log
 - Received-at timestamp display
 - Automatic follow-latest scrolling
-- Baud Rate selection
+- Baud Rate selection (remembered across reloads)
+- Copy the receive log to the clipboard or download it as a text file
 
 The default Baud Rate for QZ1 is `115200`.
 
@@ -17,25 +18,31 @@ The default Baud Rate for QZ1 is `115200`.
 Install dependencies.
 
 ```sh
-vp install
+pnpm install
 ```
 
 Start the development server.
 
 ```sh
-vp dev
+pnpm dev
 ```
 
 Build the app.
 
 ```sh
-vp build
+pnpm build
 ```
 
-Run checks.
+Run checks (format, lint, type check).
 
 ```sh
-vp check
+pnpm check
+```
+
+Run tests.
+
+```sh
+pnpm test
 ```
 
 ## Notes

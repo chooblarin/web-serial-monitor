@@ -7,12 +7,15 @@ type SerialControlsProps = {
   baudRates: readonly BaudRate[];
   canConnect: boolean;
   canDisconnect: boolean;
+  copyLabel: string;
   hasLogEntries: boolean;
   isBusy: boolean;
   onBaudRateChange: (baudRate: BaudRate) => void;
   onClearLog: () => void;
   onConnect: () => void;
+  onCopyLog: () => void;
   onDisconnect: () => void;
+  onSaveLog: () => void;
 };
 
 export function SerialControls({
@@ -20,12 +23,15 @@ export function SerialControls({
   baudRates,
   canConnect,
   canDisconnect,
+  copyLabel,
   hasLogEntries,
   isBusy,
   onBaudRateChange,
   onClearLog,
   onConnect,
+  onCopyLog,
   onDisconnect,
+  onSaveLog,
 }: SerialControlsProps) {
   return (
     <div className="flex flex-wrap items-end gap-3">
@@ -53,6 +59,12 @@ export function SerialControls({
         onClick={onDisconnect}
       >
         切断
+      </Button>
+      <Button type="button" variant="outline" disabled={!hasLogEntries} onClick={onCopyLog}>
+        {copyLabel}
+      </Button>
+      <Button type="button" variant="outline" disabled={!hasLogEntries} onClick={onSaveLog}>
+        保存
       </Button>
       <Button type="button" variant="outline" disabled={!hasLogEntries} onClick={onClearLog}>
         ログ消去

@@ -4,24 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { LogEntry } from "@/hooks/use-serial-monitor";
+import { formatReceivedAt } from "@/lib/log-export";
 
 type NmeaLogViewProps = {
   logEntries: LogEntry[];
   maxLogEntries: number;
 };
 
-const timeFormatter = new Intl.DateTimeFormat(undefined, {
-  hour: "2-digit",
-  minute: "2-digit",
-  second: "2-digit",
-  hour12: false,
-});
-
 const followLatestThresholdPx = 24;
-
-function formatReceivedAt(date: Date) {
-  return `${timeFormatter.format(date)}.${String(date.getMilliseconds()).padStart(3, "0")}`;
-}
 
 function getDistanceFromBottom(viewport: HTMLDivElement) {
   return viewport.scrollHeight - viewport.scrollTop - viewport.clientHeight;
