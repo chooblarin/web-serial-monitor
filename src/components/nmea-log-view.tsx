@@ -1,9 +1,11 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { Check, Copy } from "lucide-react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { LogEntry } from "@/hooks/use-serial-monitor";
+import { copyTextToClipboard } from "@/lib/clipboard";
 import { formatReceivedAt } from "@/lib/log-export";
 
 type NmeaLogViewProps = {
@@ -12,6 +14,45 @@ type NmeaLogViewProps = {
 };
 
 const followLatestThresholdPx = 24;
+const copyFeedbackDurationMs = 1500;
+
+function NmeaLogRow({ entry }: { entry: LogEntry }) {
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!copied) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => setCopied(false), copyFeedbackDurationMs);
+    return () => window.clearTimeout(timer);
+  }, [copied]);
+
+  const handleCopy = async () => {
+    setCopied(await copyTextToClipboard(entry.sentence));
+  };
+
+  return (
+    <li className="group grid gap-3 sm:grid-cols-[7.5rem_1fr]">
+      <time className="text-slate-500">{formatReceivedAt(entry.receivedAt)}</time>
+      <div className="flex items-start justify-between gap-2">
+        <span className="break-all text-emerald-200">{entry.sentence}</span>
+        <button
+          type="button"
+          onClick={handleCopy}
+          aria-label={`${entry.sentence} をコピー`}
+          className="mt-0.5 shrink-0 rounded p-1 text-slate-500 opacity-0 transition hover:text-slate-200 focus-visible:opacity-100 focus-visible:ring-1 focus-visible:ring-slate-500 focus-visible:outline-none group-hover:opacity-100"
+        >
+          {copied ? (
+            <Check className="size-3.5 text-emerald-300" aria-hidden="true" />
+          ) : (
+            <Copy className="size-3.5" aria-hidden="true" />
+          )}
+        </button>
+      </div>
+    </li>
+  );
+}
 
 function getDistanceFromBottom(viewport: HTMLDivElement) {
   return viewport.scrollHeight - viewport.scrollTop - viewport.clientHeight;
@@ -110,10 +151,7 @@ export function NmeaLogView({ logEntries, maxLogEntries }: NmeaLogViewProps) {
             ) : (
               <ol className="grid gap-1 font-mono text-sm leading-6">
                 {logEntries.map((entry) => (
-                  <li className="grid gap-3 sm:grid-cols-[7.5rem_1fr]" key={entry.id}>
-                    <time className="text-slate-500">{formatReceivedAt(entry.receivedAt)}</time>
-                    <span className="break-all text-emerald-200">{entry.sentence}</span>
-                  </li>
+                  <NmeaLogRow entry={entry} key={entry.id} />
                 ))}
               </ol>
             )}

@@ -9,7 +9,7 @@ A simple browser-based serial monitor for receiving and displaying NMEA-0183 out
 - Received-at timestamp display
 - Automatic follow-latest scrolling
 - Baud Rate selection (remembered across reloads)
-- Copy the receive log to the clipboard or download it as a text file
+- Copy an individual NMEA Sentence to the clipboard, or download the whole log as a text file
 
 The default Baud Rate for QZ1 is `115200`.
 

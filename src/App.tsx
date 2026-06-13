@@ -1,21 +1,9 @@
-import { useEffect, useState } from "react";
-
 import { MonitorHeader } from "@/components/monitor-header";
 import { NmeaLogView } from "@/components/nmea-log-view";
 import { SerialControls } from "@/components/serial-controls";
 import { StatusPanel } from "@/components/status-panel";
 import { baudRates, maxLogEntries, useSerialMonitor } from "@/hooks/use-serial-monitor";
 import { formatLogEntriesAsText } from "@/lib/log-export";
-
-type CopyState = "idle" | "copied" | "error";
-
-const copyFeedbackDurationMs = 2000;
-
-const copyLabels: Record<CopyState, string> = {
-  idle: "コピー",
-  copied: "コピーしました",
-  error: "コピー失敗",
-};
 
 function buildLogFileName(date: Date) {
   const pad = (value: number) => String(value).padStart(2, "0");
@@ -27,28 +15,6 @@ function buildLogFileName(date: Date) {
 
 function App() {
   const monitor = useSerialMonitor();
-  const [copyState, setCopyState] = useState<CopyState>("idle");
-
-  useEffect(() => {
-    if (copyState === "idle") {
-      return;
-    }
-
-    const timer = window.setTimeout(() => setCopyState("idle"), copyFeedbackDurationMs);
-    return () => window.clearTimeout(timer);
-  }, [copyState]);
-
-  const handleCopyLog = async () => {
-    try {
-      if (!navigator.clipboard) {
-        throw new Error("Clipboard API is unavailable.");
-      }
-      await navigator.clipboard.writeText(formatLogEntriesAsText(monitor.logEntries));
-      setCopyState("copied");
-    } catch {
-      setCopyState("error");
-    }
-  };
 
   const handleSaveLog = () => {
     const text = formatLogEntriesAsText(monitor.logEntries);
@@ -75,8 +41,6 @@ function App() {
             onBaudRateChange={monitor.setBaudRate}
             onClearLog={monitor.clearLog}
             onConnect={monitor.connect}
-            onCopyLog={handleCopyLog}
-            copyLabel={copyLabels[copyState]}
             onDisconnect={monitor.disconnect}
             onSaveLog={handleSaveLog}
           />
